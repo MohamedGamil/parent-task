@@ -13,29 +13,14 @@ interface Repository
     /**
      * Query all repository data
      *
-     * @return Collection
+     * @return array|Collection|LazyCollection
      */
     public function all();
 
     /**
      * Start a new query
      *
-     * @return Collection|Builder
+     * @return array|Collection|LazyCollection|Builder
      */
-    public function query(): Collection|Builder;
-
-    /**
-     * Set repository data source
-     *
-     * @param DataSource $dataSource
-     * @return self
-     */
-    public function setDataSource(DataSource $dataSource): self;
-
-    /**
-     * Get data source
-     *
-     * @return DataSource
-     */
-    public function getDataSource(): DataSource;
+    public function query();
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\PaymentsDataAggregatorRepository;
 use App\Repositories\Base\JsonDataSource;
 use App\Repositories\DataProviderXRepository;
 use App\Repositories\DataProviderYRepository;
@@ -9,6 +10,19 @@ use Illuminate\Support\ServiceProvider;
 
 class RepositoriesServiceProvider extends ServiceProvider
 {
+    /**
+     * Aggregated Payments Data Repositories
+     */
+    const AGGREGATED_PAYMENTS_REPOSITORIES = [
+        DataProviderXRepository::class,
+        DataProviderYRepository::class,
+    ];
+
+    /**
+     * Payments Data Aggregator Repository Class
+     */
+    const AGGREGATOR_DATA_REPOSITORY_CLASS = PaymentsDataAggregatorRepository::class;
+
     /**
      * JSON Data Source Class
      */
@@ -21,16 +35,20 @@ class RepositoriesServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $repositories = static::AGGREGATED_PAYMENTS_REPOSITORIES;
+
         $this->app->bind(
             ...$this->bindableJsonDataSource()
         );
 
-        $this->app->bind(
-            ...$this->bindableRepository(DataProviderXRepository::class)
-        );
+        foreach($repositories as $class) {
+            $this->app->bind(
+                ...$this->bindableJsonRepository($class)
+            );
+        }
 
         $this->app->bind(
-            ...$this->bindableRepository(DataProviderYRepository::class)
+            ...$this->bindableAggregatorPaymentsRepository()
         );
     }
 
@@ -40,7 +58,7 @@ class RepositoriesServiceProvider extends ServiceProvider
 
         return [
             $dataSourceClass,
-            function ($app, $config) use ($dataSourceClass) {
+            function ($app, array $config) use ($dataSourceClass) {
                 $config = (Object) $config;
                 $path = config('json.base_dir', '') . $config->file;
 
@@ -51,13 +69,14 @@ class RepositoriesServiceProvider extends ServiceProvider
                 return new $dataSourceClass(
                     $path,
                     $config->cached,
-                    $config->duration
+                    $config->duration,
+                    $config->lazy,
                 );
             }
         ];
     }
 
-    private function bindableRepository(string $class)
+    private function bindableJsonRepository(string $class)
     {
         return [
             $class,
@@ -67,6 +86,25 @@ class RepositoriesServiceProvider extends ServiceProvider
                 return new $class(
                     $app->make(JsonDataSource::class, $config)
                 );
+            }
+        ];
+    }
+
+    private function bindableAggregatorPaymentsRepository()
+    {
+        $class = static::AGGREGATOR_DATA_REPOSITORY_CLASS;
+        $aggregated = static::AGGREGATED_PAYMENTS_REPOSITORIES;
+
+        return [
+            $class,
+            function ($app) use ($class, $aggregated) {
+                $repos = [];
+
+                foreach ($aggregated as $r) {
+                    $repos[] = $app->make($r);
+                }
+
+                return new $class(...$repos);
             }
         ];
     }

@@ -10,5 +10,4 @@ use App\Repositories\Base\JsonRepository;
 final class DataProviderYRepository extends JsonRepository
 {
     protected static $jsonFile = 'DataProviderY.json';
-
 }

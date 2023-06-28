@@ -15,26 +15,41 @@ abstract class Entity implements IEntity
     const STRICT_ATTRIBUTES = true;
 
     /**
+     * Entity label
+     *
+     * @static
+     */
+    protected static string $label;
+
+    /**
      * Entity attributes
      */
     protected array $attributes;
 
-    public static function fromArray(array $attributes)
+    public static function fromArray($attributes)
     {
         return (new static)->setAttributes(
-            $attributes
+            (array) $attributes
         );
+    }
+
+    public static function getLabel(): string
+    {
+        return static::$label;
     }
 
     public function toArray(): array
     {
-        return $this->attributes ?? [];
+        return collect(
+            $this->getAttributes()
+        )->toArray();
     }
 
     public function setAttributes(array $attributes)
     {
+        $this->attributes = $attributes;
         $allowed = array_keys(
-            $this->attributes ?? []
+            $this->getAttributes()
         );
 
         if (false === empty($allowed) && true === static::STRICT_ATTRIBUTES) {
@@ -42,10 +57,19 @@ abstract class Entity implements IEntity
                 ->only($allowed)
                 ->toArray();
         }
-        else {
-            $this->attributes = $attributes;
-        }
 
         return $this;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->attributes ?? [];
+    }
+
+    public function getAttribute($key, $default = null)
+    {
+        return isset($this->attributes[$key])
+            ? $this->attributes[$key]
+            : $default;
     }
 }

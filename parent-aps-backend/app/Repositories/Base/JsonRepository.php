@@ -7,26 +7,34 @@ use App\Repositories\Concerns\JsonDataSource;
 use App\Repositories\Concerns\JsonRepository as IJsonRepository;
 use App\Repositories\Concerns\Repository;
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 
 /**
  * Base JSON Repository
+ *
+ * @uses JsonRepository::$jsonFile
  */
 abstract class JsonRepository implements IJsonRepository
 {
     /**
+     * JSON File Name
+     */
+    protected static $jsonFile;
+
+    /**
+     * Use lazy collections
+     */
+    protected static $lazy = true;
+
+    /**
      * Should cache data
      */
-    protected static bool $cached = false;
+    protected static $cached = false;
 
     /**
      * Cache duration
      */
-    protected static int $cacheDuration = 1200;
-
-    /**
-     * JSON File Name
-     */
-    protected static $jsonFile;
+    protected static $cacheDuration = 1200;
 
     /**
      * Data source instance
@@ -44,7 +52,7 @@ abstract class JsonRepository implements IJsonRepository
         );
     }
 
-    public function query(): Collection
+    public function query(): Collection|LazyCollection
     {
         return $this->dataSource->query();
     }
@@ -54,11 +62,18 @@ abstract class JsonRepository implements IJsonRepository
         return $this->query()->all();
     }
 
-    public function filter(callable $callback = null): Collection
+    public function filter(callable $callback = null): Collection|LazyCollection
     {
         return $this->query()->filter(
             $callback
         );
+    }
+
+    public function filterBy(string $attribute, mixed $value): Collection|LazyCollection
+    {
+        return $this->filter(function($item) use ($attribute, $value) {
+            return collect($item)->get($attribute) === $value;
+        });
     }
 
     public function setDataSource(DataSource $dataSource): Repository
@@ -79,6 +94,7 @@ abstract class JsonRepository implements IJsonRepository
             'file' => static::$jsonFile,
             'cached' => static::$cached,
             'duration' => static::$cacheDuration,
+            'lazy' => static::$lazy,
         ];
     }
 }

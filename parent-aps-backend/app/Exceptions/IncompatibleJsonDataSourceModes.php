@@ -4,10 +4,10 @@ namespace App\Exceptions;
 
 use Throwable;
 
-class BadJsonDataSourceFile extends JsonDataSourceException
+class IncompatibleJsonDataSourceModes extends JsonDataSourceException
 {
     public function __construct(
-        string $message = 'Invalid JSON data source file',
+        string $message = 'Enabled modes for this data source are incompatible.',
         int $code = 0,
         Throwable $previous = null
     ) {

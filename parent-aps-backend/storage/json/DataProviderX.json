@@ -1,8 +1,42 @@
-{
-    "parentAmount": 200,
-    "Currency": "USD",
-    "parentEmail": "parent1@parent.eu",
-    "statusCode": 1,
-    "registerationDate": "2018-11-30",
-    "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a613"
-}
+[
+    {
+        "parentAmount": 200,
+        "Currency": "USD",
+        "parentEmail": "parent2@parent.eu",
+        "statusCode": 1,
+        "registerationDate": "2018-11-30",
+        "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a610"
+    },
+    {
+        "parentAmount": 650,
+        "Currency": "USD",
+        "parentEmail": "parent1@parent.eu",
+        "statusCode": 1,
+        "registerationDate": "2018-11-30",
+        "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a611"
+    },
+    {
+        "parentAmount": 191,
+        "Currency": "USD",
+        "parentEmail": "parent3@parent.eu",
+        "statusCode": 1,
+        "registerationDate": "2018-11-30",
+        "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a612"
+    },
+    {
+        "parentAmount": 1070,
+        "Currency": "USD",
+        "parentEmail": "parent1@parent.eu",
+        "statusCode": 1,
+        "registerationDate": "2018-11-30",
+        "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a613"
+    },
+    {
+        "parentAmount": 147,
+        "Currency": "USD",
+        "parentEmail": "parent4@parent.eu",
+        "statusCode": 1,
+        "registerationDate": "2018-11-30",
+        "parentIdentification": "d3d29d70-1d25-11e3-8591-034165a3a614"
+    }
+]

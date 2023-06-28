@@ -9,12 +9,14 @@ use Domain\Types\DataProviderY as TDataProviderY;
  */
 final class DataProviderY extends Entity
 {
+    protected static string $label = 'DataProviderY';
+
     protected array $attributes = [
-        TDataProviderY::ID => null,
-        TDataProviderY::EMAIL => null,
-        TDataProviderY::STATUS => null,
-        TDataProviderY::BALANCE => null,
-        TDataProviderY::CURRENCY => null,
-        TDataProviderY::CREATED_AT => null,
+        TDataProviderY::ID->value => null,
+        TDataProviderY::EMAIL->value => null,
+        TDataProviderY::STATUS->value => null,
+        TDataProviderY::BALANCE->value => null,
+        TDataProviderY::CURRENCY->value => null,
+        TDataProviderY::CREATED_AT->value => null,
     ];
 }

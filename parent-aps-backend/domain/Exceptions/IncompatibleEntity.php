@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Exceptions;
+namespace Domain\Exceptions;
 
 use Throwable;
 
-class BadJsonDataSourceFile extends JsonDataSourceException
+class IncompatibleEntity extends DomainException
 {
     public function __construct(
-        string $message = 'Invalid JSON data source file',
+        string $message = 'Trying to convert from/to an incompatible entity.',
         int $code = 0,
         Throwable $previous = null
     ) {
