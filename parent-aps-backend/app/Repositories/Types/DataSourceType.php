@@ -7,6 +7,6 @@ namespace App\Repositories\Types;
  */
 enum DataSourceType: string
 {
-    case Json = 'json';
-    case Eloquent = 'eloquent';
+    case JSON = 'json';
+    case ELOQUENT = 'eloquent';
 }

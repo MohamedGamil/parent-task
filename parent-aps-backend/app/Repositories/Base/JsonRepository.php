@@ -39,7 +39,9 @@ abstract class JsonRepository implements IJsonRepository
     public function __construct(
         JsonDataSource $dataSource
     ) {
-        $this->setDataSource($dataSource);
+        $this->setDataSource(
+            $dataSource
+        );
     }
 
     public function query(): Collection
@@ -54,7 +56,9 @@ abstract class JsonRepository implements IJsonRepository
 
     public function filter(callable $callback = null): Collection
     {
-        return $this->query()->filter($callback);
+        return $this->query()->filter(
+            $callback
+        );
     }
 
     public function setDataSource(DataSource $dataSource): Repository

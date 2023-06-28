@@ -7,7 +7,7 @@ use App\Repositories\Concerns\JsonDataSource as IJsonDataSource;
 use App\Repositories\Types\DataSourceType;
 use App\Repositories\Types\JsonDataErrors;
 use Illuminate\Support\Collection;
-use \JsonMachine\Items;
+use JsonMachine\Items;
 
 /**
  * JSON Data Source
@@ -17,7 +17,7 @@ final class JsonDataSource implements IJsonDataSource
     /**
      * Defines data source type
      */
-    const DATA_SOURCE_TYPE = DataSourceType::Json;
+    const DATA_SOURCE_TYPE = DataSourceType::JSON;
 
     /**
      * Should cache data
