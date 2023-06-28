@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\DataProviderXRepository;
+use App\Repositories\DataProviderYRepository;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (DataProviderXRepository $repoX, DataProviderYRepository $repoY) {
+    dd(
+        $repoX->all(),
+        $repoY->all(),
+    );
+
+    // return view('welcome');
 });

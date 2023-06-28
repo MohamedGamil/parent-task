@@ -2,6 +2,8 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "sail:composer": "./vendor/bin/sail composer",
+        "sail:artisan": "./vendor/bin/sail artisan",
         "sail:up": "./vendor/bin/sail up",
         "dev": "vite",
         "build": "vite build"
