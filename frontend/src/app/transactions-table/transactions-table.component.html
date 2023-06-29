@@ -2,7 +2,11 @@
   <table mat-table class="full-width-table" matSort aria-label="Elements">
     <ng-container matColumnDef="data_provider">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Data Provider</th>
-      <td mat-cell *matCellDef="let row">{{row.data_provider}}</td>
+      <td mat-cell *matCellDef="let row">
+        <span class="status-badge status-badge--{{ row.data_provider }}">
+          {{ row.data_provider }}
+        </span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="parent_id">
@@ -12,18 +16,10 @@
 
     <ng-container matColumnDef="parent_amount">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Amount</th>
-      <td mat-cell *matCellDef="let row">{{row.parent_amount}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="parent_email">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Email</th>
-      <td mat-cell *matCellDef="let row">{{row.parent_email}}</td>
-    </ng-container>
-
-    <ng-container matColumnDef="status_code_2">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status Code</th>
       <td mat-cell *matCellDef="let row">
-        <small>{{ row.status_code }}</small>
+        <strong>
+          {{ currencyAmountFormat(row.parent_amount, row.currency) }}
+        </strong>
       </td>
     </ng-container>
 
@@ -34,6 +30,18 @@
           {{ getStatusCase(row.status_code) }}
         </span>
       </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status_code_2">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status Code</th>
+      <td mat-cell *matCellDef="let row">
+        <small>{{ row.status_code }}</small>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="parent_email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Email</th>
+      <td mat-cell *matCellDef="let row">{{row.parent_email}}</td>
     </ng-container>
 
     <ng-container matColumnDef="currency">

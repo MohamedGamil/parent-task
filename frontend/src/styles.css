@@ -102,3 +102,13 @@ button {
   color: #FFF;
   background-color: #ff2727;
 }
+
+.status-badge.status-badge--DataProviderX {
+  color: #FFF;
+  background-color: #2768ff;
+}
+
+.status-badge.status-badge--DataProviderY {
+  color: #FFF;
+  background-color: #20ae81;
+}

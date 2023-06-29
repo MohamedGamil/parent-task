@@ -24,11 +24,11 @@ export class TransactionsTableComponent implements AfterViewInit, AfterViewCheck
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [
     'data_provider',
-    'parent_amount',
     'parent_id',
-    'parent_email',
-    'status_code_2',
+    'parent_amount',
     'status_code',
+    'status_code_2',
+    'parent_email',
     'currency',
     'registeration_date',
   ];
@@ -59,6 +59,13 @@ export class TransactionsTableComponent implements AfterViewInit, AfterViewCheck
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
     })
+  }
+
+  currencyAmountFormat(amount: number, currency: 'USD' | 'AED' = 'USD') {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency
+    }).format(amount);
   }
 
   getStatusCase(statusCode: number) {
