@@ -28,7 +28,7 @@ Route::get('/', function (
     PaymentsDataRepositoryInterface $aggregator,
     RetrieveDataInterface $retrieveDataUseCase
 ) {
-    // return view('welcome');
+    return view('welcome');
 
     dd(
         $retrieveDataUseCase->execute(

@@ -80,13 +80,15 @@ class RepositoriesServiceProvider extends ServiceProvider
 
     private function bindableJsonRepository(string $class)
     {
+        $jsonSourceClass = static::JSON_DATA_SRC_CLASS;
+
         return [
             $class,
-            function ($app) use ($class) {
+            function ($app) use ($class, $jsonSourceClass) {
                 $config = $class::getJsonDataSourceConfig();
 
                 return new $class(
-                    $app->make(JsonDataSource::class, $config)
+                    $app->make($jsonSourceClass, $config)
                 );
             }
         ];
