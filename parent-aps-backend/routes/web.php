@@ -1,8 +1,9 @@
 <?php
 
+use App\Repositories\Contracts\PaymentsDataRepositoryInterface;
 use App\Repositories\DataProviderXRepository;
 use App\Repositories\DataProviderYRepository;
-use App\Repositories\PaymentsDataAggregatorRepository;
+use App\UseCases\Contracts\RetrieveDataInterface;
 use Domain\Entities\AggregatedPayment;
 use Domain\Entities\DataProviderX;
 use Domain\Entities\DataProviderY;
@@ -20,27 +21,47 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Playground
 Route::get('/', function (
     DataProviderXRepository $repoX,
     DataProviderYRepository $repoY,
-    PaymentsDataAggregatorRepository $aggregator,
+    PaymentsDataRepositoryInterface $aggregator,
+    RetrieveDataInterface $retrieveDataUseCase
 ) {
+    // return view('welcome');
+
+    dd(
+        $retrieveDataUseCase->execute(
+            request()->all()
+        )
+    );
+
     $repox = $repoX->all();
     $repoy = $repoY->all();
 
     $aggr1 = $aggregator
         ->only(DataProviderXRepository::class)
-        ->all();
+        ->all()
+        ->toArray();
 
     $aggr2 = $aggregator
         ->only(DataProviderYRepository::class)
         ->query()
         ->toArray();
 
+    $aggr3 = $aggregator
+        ->only(DataProviderXRepository::class)
+        ->filter(function($item, $index, $repository) {
+            $col = $repository instanceof DataProviderXRepository
+                ? 'parentAmount'
+                : 'balance';
+
+            return $item->$col > 500;
+        })
+        ->toArray();
+
     $aggr1Exp = collect($aggr1)->map(fn($item) => DataProviderX::fromArray($item));
-
     $aggr2Exp1 = collect($aggr2)->map(fn($item) => DataProviderY::fromArray($item));
-
     $aggr2Exp2 = collect($aggr2)
         ->map(fn($item) => AggregatedPayment::fromEntity(
             Entities::DATA_PROVIDER_Y,
@@ -48,8 +69,10 @@ Route::get('/', function (
         ));
 
     dd(
-        (Object) compact('repox', 'repoy', 'aggr1', 'aggr2', 'aggr1Exp', 'aggr2Exp1', 'aggr2Exp2')
+        (Object) compact(
+            'repox', 'repoy',
+            'aggr1', 'aggr2', 'aggr3',
+            'aggr1Exp', 'aggr2Exp1', 'aggr2Exp2'
+        )
     );
-
-    // return view('welcome');
 });

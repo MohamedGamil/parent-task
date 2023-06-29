@@ -2,8 +2,8 @@
 
 namespace Domain\Entities;
 
-use Domain\Concerns\EntityTransformer;
-use Domain\Shared\EntityTransformer as Transformer;
+use Domain\Concerns\EntityTransformer as IEntityTransformer;
+use Domain\Shared\EntityTransformer;
 use Domain\Types\AggregatedPayment as TAggregatedPayment;
 use Domain\Types\DataProviderX as TDataProviderX;
 use Domain\Types\DataProviderY as TDataProviderY;
@@ -12,11 +12,13 @@ use Domain\Types\Entities;
 /**
  * Aggregated Payment Entity
  */
-final class AggregatedPayment extends Entity implements EntityTransformer
+final class AggregatedPayment extends Entity implements IEntityTransformer
 {
-    use Transformer;
+    use EntityTransformer;
 
     protected static string $label = 'AggregatedPayment';
+
+    protected static $supportedEntityKey = TAggregatedPayment::DATA_PROVIDER->value;
 
     protected static $supportedEntities = [
         Entities::DATA_PROVIDER_X->value,
@@ -43,6 +45,7 @@ final class AggregatedPayment extends Entity implements EntityTransformer
     ];
 
     protected array $attributes = [
+        TAggregatedPayment::DATA_PROVIDER->value => null,
         TAggregatedPayment::PARENT_EMAIL->value => null,
         TAggregatedPayment::PARENT_IDENTIFICATION->value => null,
         TAggregatedPayment::PARENT_AMOUNT->value => null,

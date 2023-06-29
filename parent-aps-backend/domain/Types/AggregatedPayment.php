@@ -7,6 +7,7 @@ namespace Domain\Types;
  */
 enum AggregatedPayment: string
 {
+    case DATA_PROVIDER = 'data_provider';
     case PARENT_EMAIL = 'parent_email';
     case PARENT_IDENTIFICATION = 'parent_id';
     case PARENT_AMOUNT = 'parent_amount';

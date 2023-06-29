@@ -12,27 +12,32 @@ use Domain\Types\Entities;
  *
  * @property-read array $supportedEntities
  * @property-read array $supportedEntitiesMap
+ * @property-read string $supportedEntityKey
  */
 trait EntityTransformer
 {
     public static function fromEntity(Entities $entityClass, array $attributes)
     {
-        $entityClass = $entityClass->value;
-
-        /** @var string $entityClass */
         /** @var Entity $entity */
-        $entity = $entityClass::fromArray($attributes);
+        $entityClass_ = $entityClass->value;
+        $entity = $entityClass_::fromArray($attributes);
         $map = static::getSupportedEntitiesMap();
-        $entityAttrs = $entity->getAttributes();
-        $entityMap = isset($map[$entityClass])
-            ? $map[$entityClass]
+        $entityMap = isset($map[$entityClass_])
+            ? $map[$entityClass_]
             : null;
 
-        if (true === empty($entityMap)) {
-            throw new IncompatibleEntity("Trying to tranform from incompatible entity: '{$entityClass}'.");
+        if (false === static::isSupportedEntity($entityClass) || true === empty($entityMap)) {
+            throw new IncompatibleEntity(
+                "Trying to tranform from incompatible entity: '{$entityClass_}'."
+            );
         }
 
-        $mapped = [];
+        $fromKey = static::getSupportedEntityKey();
+        $mapped = true === empty($fromKey)
+            ? []
+            : [
+                $fromKey => class_basename($entityClass_)
+            ];
 
         foreach($entityMap as $fromField => $toField) {
             $mapped[$toField] = $entity->getAttribute($fromField);
@@ -46,23 +51,37 @@ trait EntityTransformer
         return static::$supportedEntities;
     }
 
+    public static function isSupportedEntity(Entities $entityClass): bool
+    {
+        return in_array(
+            $entityClass->value,
+            static::getSupportedEntities(),
+            true
+        );
+    }
+
     public static function getSupportedEntitiesMap(): array
     {
         return static::$supportedEntitiesMap;
     }
 
+    public static function getSupportedEntityKey(): string
+    {
+        return static::$supportedEntityKey;
+    }
+
     public function toEntity(Entities $targetEntity): Entity
     {
-        $targetEntity = $targetEntity->value;
-
-        /** @var string $targetEntity */
+        $targetEntity_ = $targetEntity->value;
         $map = static::getSupportedEntitiesMap();
-        $entityMap = isset($map[$targetEntity])
-            ? $map[$targetEntity]
+        $entityMap = isset($map[$targetEntity_])
+            ? $map[$targetEntity_]
             : null;
 
-        if (true === empty($entityMap)) {
-            throw new IncompatibleEntity("Trying to tranform to incompatible entity: '{$targetEntity}'.");
+        if (false === static::isSupportedEntity($targetEntity) || true === empty($entityMap)) {
+            throw new IncompatibleEntity(
+                "Trying to tranform to incompatible entity: '{$targetEntity_}'."
+            );
         }
 
         $mapped = [];
@@ -72,9 +91,6 @@ trait EntityTransformer
             $mapped[$toField] = $this->getAttribute($fromField);
         }
 
-        /** @var Entity $entity */
-        $entity = $targetEntity::fromArray($mapped);
-
-        return $entity;
+        return $targetEntity_::fromArray($mapped);
     }
 }

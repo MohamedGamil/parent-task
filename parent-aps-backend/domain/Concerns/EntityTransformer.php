@@ -36,6 +36,14 @@ interface EntityTransformer
     public static function getSupportedEntitiesMap(): array;
 
     /**
+     * Get compatible entity attributes key
+     *
+     * @return string
+     * @static
+     */
+    public static function getSupportedEntityKey(): string;
+
+    /**
      * Transform to a compatible entity
      *
      * @param Entities $targetEntity

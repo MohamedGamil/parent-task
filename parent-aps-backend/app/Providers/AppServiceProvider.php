@@ -14,6 +14,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->register(
             RepositoriesServiceProvider::class
         );
+
+        $this->app->register(
+            UseCasesServiceProvider::class
+        );
     }
 
     /**

@@ -14,4 +14,12 @@ enum Entities: string
     case AGGREGATED_PAYMENT = AggregatedPayment::class;
     case DATA_PROVIDER_Y = DataProviderY::class;
     case DATA_PROVIDER_X = DataProviderX::class;
+
+    public static function fromName(string $name) {
+        $name = strtoupper(
+            \Str::snake($name)
+        );
+
+        return constant("self::{$name}");
+    }
 }

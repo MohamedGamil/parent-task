@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Repositories\PaymentsDataAggregatorRepository;
 use App\Repositories\Base\JsonDataSource;
+use App\Repositories\Contracts\PaymentsDataRepositoryInterface;
 use App\Repositories\DataProviderXRepository;
 use App\Repositories\DataProviderYRepository;
 use Illuminate\Support\ServiceProvider;
@@ -19,9 +20,10 @@ class RepositoriesServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Payments Data Aggregator Repository Class
+     * Payments Data Aggregator Repository Class & Interface
      */
     const AGGREGATOR_DATA_REPOSITORY_CLASS = PaymentsDataAggregatorRepository::class;
+    const AGGREGATOR_DATA_REPOSITORY_INTERFACE = PaymentsDataRepositoryInterface::class;
 
     /**
      * JSON Data Source Class
@@ -35,7 +37,7 @@ class RepositoriesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $repositories = static::AGGREGATED_PAYMENTS_REPOSITORIES;
+        $repositories = $this->getAggregatedRepositories();
 
         $this->app->bind(
             ...$this->bindableJsonDataSource()
@@ -92,20 +94,29 @@ class RepositoriesServiceProvider extends ServiceProvider
 
     private function bindableAggregatorPaymentsRepository()
     {
+        $contract = static::AGGREGATOR_DATA_REPOSITORY_INTERFACE;
         $class = static::AGGREGATOR_DATA_REPOSITORY_CLASS;
-        $aggregated = static::AGGREGATED_PAYMENTS_REPOSITORIES;
+        $repositories = $this->getAggregatedRepositories();
 
         return [
-            $class,
-            function ($app) use ($class, $aggregated) {
+            $contract,
+            function ($app) use ($class, $repositories) {
                 $repos = [];
 
-                foreach ($aggregated as $r) {
+                foreach ($repositories as $r) {
                     $repos[] = $app->make($r);
                 }
 
                 return new $class(...$repos);
             }
         ];
+    }
+
+    private function getAggregatedRepositories()
+    {
+        return config(
+            'repositories.aggregated_payments_repositories',
+            static::AGGREGATED_PAYMENTS_REPOSITORIES
+        );
     }
 }

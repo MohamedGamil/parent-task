@@ -2,14 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Concerns\Criteria;
 use App\Repositories\Concerns\JsonRepository;
-use App\Repositories\Concerns\Repository;
+use App\Repositories\Contracts\PaymentsDataRepositoryInterface;
 
 /**
  * Payments Data Aggregator Repository
  */
-final class PaymentsDataAggregatorRepository implements Repository
+final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryInterface
 {
     /**
      * Aggregated data repositories
@@ -17,13 +16,6 @@ final class PaymentsDataAggregatorRepository implements Repository
      * @param JsonRepository[] $repositories
      */
     protected array $repositories = [];
-
-    /**
-     * Filters criteria instances
-     *
-     * @var Criteria[] $filters
-     */
-    protected array $filters = [];
 
     /**
      * Filters data by a specific provider
@@ -42,8 +34,6 @@ final class PaymentsDataAggregatorRepository implements Repository
     {
         $source = $this->selectSources($repository);
 
-        $this->cleanup();
-
         if (is_array($source)) {
             $sources = [];
 
@@ -51,17 +41,17 @@ final class PaymentsDataAggregatorRepository implements Repository
                 $sources[$class] = $src->all();
             }
 
-            return $sources;
+            return collect($sources);
         }
 
-        return $source->all();
+        return collect(
+            $source->all()
+        );
     }
 
     public function query($repository = null)
     {
         $source = $this->selectSources($repository);
-
-        $this->cleanup();
 
         if (is_array($source)) {
             $sources = [];
@@ -70,10 +60,12 @@ final class PaymentsDataAggregatorRepository implements Repository
                 $sources[$class] = $src->query();
             }
 
-            return $sources;
+            return collect($sources);
         }
 
-        return $source->query();
+        return collect(
+            $source->query()
+        );
     }
 
     /**
@@ -89,22 +81,22 @@ final class PaymentsDataAggregatorRepository implements Repository
         return $this;
     }
 
-    public function addFilter(Criteria $filter)
+    /**
+     * Query and filter using a callback
+     *
+     * @param callable $callback Filter callback
+     * @return Collection|LazyCollection
+     */
+    public function filter($callback)
     {
-        $this->filters[] = $filter;
+        $source = $this->selectSources();
 
-        return $this;
-    }
-
-    public function applyFilters(array $filters = [])
-    {
-        if (false === empty($filters)) {
-            foreach($filters as $filter) {
-                $this->addFilter($filter);
-            }
+        if (is_array($source)) {
+            return collect($source)
+                ->map(fn($repo) => $repo->filter(fn($item, $idx) => $callback($item, $idx, $repo)));
         }
 
-        $this->executeFilters();
+        return $source->filter(fn($item, $idx) => $callback($item, $idx, $source));
     }
 
     /**
@@ -133,6 +125,8 @@ final class PaymentsDataAggregatorRepository implements Repository
         $only = $this->only;
         $sources = [];
 
+        $this->queryCleanup();
+
         if (false === empty($repository) && isset($this->repositories[$repository])) {
             return $this->repositories[$repository];
         }
@@ -152,16 +146,7 @@ final class PaymentsDataAggregatorRepository implements Repository
         return $sources;
     }
 
-    private function executeFilters()
-    {
-        $filters = $this->filters;
-
-        foreach($filters as $filter) {
-            // TODO:
-        }
-    }
-
-    private function cleanup()
+    private function queryCleanup()
     {
         $this->only = '';
     }
