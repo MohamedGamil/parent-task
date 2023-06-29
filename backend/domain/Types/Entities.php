@@ -3,8 +3,8 @@
 namespace Domain\Types;
 
 use Domain\Entities\AggregatedPayment;
-use Domain\Entities\DataProviderY;
 use Domain\Entities\DataProviderX;
+use Domain\Entities\DataProviderY;
 
 /**
  * Entities Definitions
@@ -12,8 +12,8 @@ use Domain\Entities\DataProviderX;
 enum Entities: string
 {
     case AGGREGATED_PAYMENT = AggregatedPayment::class;
-    case DATA_PROVIDER_Y = DataProviderY::class;
     case DATA_PROVIDER_X = DataProviderX::class;
+    case DATA_PROVIDER_Y = DataProviderY::class;
 
     public static function fromName(string $name) {
         $name = strtoupper(

@@ -43,6 +43,150 @@ The backend code has been meticulously structured to adhere to SOLID principles,
 - - -
 
 
+## Code Scalability: Extending The Data Provider Functionality
+
+The UI can easily adjust to any changes done by the backend as long as the result data implements the `Domain\Entities\AggregatedPayment` entity class.
+
+This detail won't matter to you if all you want is to integrate an additional data source, for example `DataProviderZ`. To accomplish this we need to follow these steps:
+
+0. Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
+
+1. Create a new data provider repository class at this path: `./backend/app/Repositories/DataProviderZRepository.php`, then add the following code:
+```php
+<?php
+
+namespace App\Repositories;
+
+use App\Repositories\Base\JsonRepository;
+
+final class DataProviderZRepository extends JsonRepository
+{
+    protected static $jsonFile = 'DataProviderZ.json';
+}
+```
+
+2. Add the new repository to the repositories configuration at `./backend/config/repositories.php`, as follows:
+```php
+<?php
+
+return [
+    'aggregated_payments_repositories' => [
+        \App\Repositories\DataProviderXRepository::class,
+        \App\Repositories\DataProviderYRepository::class,
+        \App\Repositories\DataProviderZRepository::class,
+    ],
+];
+```
+
+3. Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
+```php
+<?php
+
+namespace Domain\Types;
+
+enum DataProviderZ: string
+{
+    case PARENT_EMAIL = 'parent_email';
+    case PARENT_IDENTIFICATION = 'id';
+    case PARENT_AMOUNT = 'amount';
+    case CURRENCY = 'currency';
+    case STATUS_CODE = 'status_code';
+    case REGISTERATION_DATE = 'created_at';
+}
+```
+
+4. We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
+```php
+<?php
+
+namespace Domain\Types;
+
+enum DataProviderZStatus: int
+{
+    case AUTHORISED = 1000;
+    case DECLINE = 2000;
+    case REFUNDED = 3000;
+
+    public static function fromName(string $name) {
+        $name = strtoupper($name);
+
+        return constant("self::{$name}");
+    }
+}
+```
+
+5. Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
+```php
+<?php
+
+namespace Domain\Entities;
+
+use Domain\Types\DataProviderZ as TDataProviderZ;
+
+final class DataProviderZ extends Entity
+{
+    protected static string $label = 'DataProviderZ';
+
+    protected array $attributes = [
+        TDataProviderZ::PARENT_EMAIL->value => null,
+        TDataProviderZ::PARENT_IDENTIFICATION->value => null,
+        TDataProviderZ::PARENT_AMOUNT->value => null,
+        TDataProviderZ::CURRENCY->value => null,
+        TDataProviderZ::STATUS_CODE->value => null,
+        TDataProviderZ::REGISTERATION_DATE->value => null,
+    ];
+}
+```
+
+6. Add the new entity to the entities type by modifying `./backend/domain/Types/Entities.php`, for example:
+```php
+<?php
+
+namespace Domain\Types;
+
+enum Entities: string
+{
+    case AGGREGATED_PAYMENT = Domain\Entities\AggregatedPayment::class;
+    case DATA_PROVIDER_X =  Domain\Entities\DataProviderX::class;
+    case DATA_PROVIDER_Y = Domain\Entities\DataProviderY::class;
+    case DATA_PROVIDER_Z = Domain\Entities\DataProviderZ::class; // <-- New entity
+
+    // ...
+}
+```
+
+7. Finally we need to modify the aggregated payment entity at `./backend/domain/Entities/AggregatedPayment.php` `(Line: 23)` to support the new data provider structure, by first adding the new entity to supported entities array:
+```php
+    protected static $supportedEntities = [
+        Entities::DATA_PROVIDER_X->value,
+        Entities::DATA_PROVIDER_Y->value,
+        Entities::DATA_PROVIDER_Z->value, // <-- New entity
+    ];
+```
+
+Then add a new entity map, at line **28** add the following example code:
+```php
+
+    protected static $supportedEntitiesMap = [ // <-- Line 28
+        // ...
+
+        // New data entity map
+        Entities::DATA_PROVIDER_Z->value => [
+            TDataProviderZ::PARENT_IDENTIFICATION->value => TAggregatedPayment::PARENT_IDENTIFICATION->value,
+            TDataProviderZ::PARENT_EMAIL->value => TAggregatedPayment::PARENT_EMAIL->value,
+            TDataProviderZ::STATUS_CODE->value => TAggregatedPayment::STATUS_CODE->value,
+            TDataProviderZ::PARENT_AMOUNT->value => TAggregatedPayment::PARENT_AMOUNT->value,
+            TDataProviderZ::CURRENCY->value => TAggregatedPayment::CURRENCY->value,
+            TDataProviderZ::REGISTERATION_DATE->value => TAggregatedPayment::REGISTERATION_DATE->value,
+        ],
+    ];
+```
+
+That's it, now we can query the new provider data using the api endpoint and its data will be mapped according to the key map pairs we defined earlier in the example code above.
+
+- - -
+
+
 ## The Challenge
 We have two providers collect data from them in json files we need to read and make some filter operations on them to get the result
 
