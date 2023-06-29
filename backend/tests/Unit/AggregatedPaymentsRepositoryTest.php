@@ -57,7 +57,7 @@ class AggregatedPaymentsRepositoryTest extends TestCase
         $all = $aggr->only(DataProviderXRepository::class)->all();
 
         $this->assertCount(
-            5,
+            6,
             $all,
             "All method with whilte using only filter should return items with count of 5"
         );

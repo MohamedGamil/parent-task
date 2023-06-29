@@ -17,21 +17,35 @@ class ItsAliveTest extends TestCase
     {
         $response = $this->get('/api/v1/users');
 
-        $response->assertJsonCount(8, 'data');
+        $response->assertJsonCount(10, 'data');
     }
 
     public function test_the_api_endpoint_filter_provider(): void
     {
         $response = $this->get('/api/v1/users?provider=DataProviderY');
 
-        $response->assertJsonCount(3, 'data');
+        $response->assertJsonCount(4, 'data');
     }
 
-    public function test_the_api_endpoint_filter_status(): void
+    public function test_the_api_endpoint_filter_status_authorised(): void
     {
         $response = $this->get('/api/v1/users?status=authorised');
 
-        $response->assertJsonCount(4, 'data');
+        $response->assertJsonCount(5, 'data');
+    }
+
+    public function test_the_api_endpoint_filter_status_decline(): void
+    {
+        $response = $this->get('/api/v1/users?status=decline');
+
+        $response->assertJsonCount(3, 'data');
+    }
+
+    public function test_the_api_endpoint_filter_status_refunded(): void
+    {
+        $response = $this->get('/api/v1/users?status=refunded');
+
+        $response->assertJsonCount(2, 'data');
     }
 
     public function test_the_api_endpoint_filter_range(): void
