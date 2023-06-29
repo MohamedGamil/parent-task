@@ -1,0 +1,11 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "test": "cd ./backend && npm run test",
+        "start": "npm run serve",
+        "serve:frontend": "cd ./frontend && npm run start",
+        "serve:backend": "cd ./backend && npm run sail:up",
+        "serve": "npm run serve:frontend & npm run serve:backend"
+    }
+}
