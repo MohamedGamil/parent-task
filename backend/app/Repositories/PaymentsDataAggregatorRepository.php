@@ -105,7 +105,6 @@ final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryIn
 
     public function setSource($source)
     {
-        dd($this->source, $source);
         $this->source = $source;
 
         return $this;
