@@ -40,18 +40,27 @@ The application's user interface (UI) has been designed to meet the task's requi
 
 The backend code has been meticulously structured to adhere to SOLID principles, ensuring efficient implementation. Despite being somewhat complex, the backend code structure maintains an inherent flexibility, allowing for seamless extension and efficient development workflows.
 
+Click the image below **[to watch a brief video](https://www.youtube.com/watch?v=7NH86cz9L7Q)** of the system in action:
+
+[![Demo Screenrecord](./preview.gif)](https://www.youtube.com/watch?v=7NH86cz9L7Q)
+
+
 - - -
 
 
 ## Code Scalability: Extending The Data Provider Functionality
 
-The UI can easily adjust to any changes done by the backend as long as the result data implements the `Domain\Entities\AggregatedPayment` entity class.
+The UI can easily adjust to any changes done by the backend as long as the result data implements the structure of `Domain\Entities\AggregatedPayment` entity class.
 
-This detail won't matter to you if all you want is to integrate an additional data source, for example `DataProviderZ`. To accomplish this we need to follow these steps:
 
-1. Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
+> This implementation detail won't matter to you if all you want is to integrate an additional data source, let's say for example `DataProviderZ`. 
 
-2. Create a new data provider repository class at this path: `./backend/app/Repositories/DataProviderZRepository.php`, then add the following code:
+
+**To accomplish this task** we need to follow these steps:
+
+**1.** Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
+
+**2.** Create a new data provider repository class at this path: `./backend/app/Repositories/DataProviderZRepository.php`, then add the following code:
 ```php
 <?php
 
@@ -65,7 +74,7 @@ final class DataProviderZRepository extends JsonRepository
 }
 ```
 
-3. Add the new repository to the repositories configuration at `./backend/config/repositories.php`, as follows:
+**3.** Add the new repository to the repositories configuration at `./backend/config/repositories.php`, as follows:
 ```php
 <?php
 
@@ -78,7 +87,7 @@ return [
 ];
 ```
 
-4. Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
+**4.** Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
 ```php
 <?php
 
@@ -95,7 +104,7 @@ enum DataProviderZ: string
 }
 ```
 
-5. We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
+**5.** We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
 ```php
 <?php
 
@@ -115,7 +124,7 @@ enum DataProviderZStatus: int
 }
 ```
 
-6. Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
+**6.** Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
 ```php
 <?php
 
@@ -138,7 +147,7 @@ final class DataProviderZ extends Entity
 }
 ```
 
-7. Add the new entity to the entities type by modifying `./backend/domain/Types/Entities.php`, for example:
+**7.** Add the new entity to the entities type by modifying `./backend/domain/Types/Entities.php`, for example:
 ```php
 <?php
 
@@ -155,7 +164,7 @@ enum Entities: string
 }
 ```
 
-7. Finally we need to modify the aggregated payment entity at `./backend/domain/Entities/AggregatedPayment.php` `(Line: 23)` to support the new data provider structure, by first adding the new entity to supported entities array:
+**8.** Finally we need to modify the aggregated payment entity at `./backend/domain/Entities/AggregatedPayment.php` `(Line: 23)` to support the new data provider structure, by first adding the new entity to supported entities array:
 ```php
     protected static $supportedEntities = [
         Entities::DATA_PROVIDER_X->value,
@@ -182,7 +191,9 @@ Then add a new entity map, at line **28** add the following example code:
     ];
 ```
 
-That's it, now we can query the new provider data using the api endpoint and its data will be mapped according to the key map pairs we defined earlier in the example code above.
+**That's all 🤞**
+
+Now we can query the new provider data using the api endpoint and its data will be mapped according to the key map pairs we defined in the example code above.
 
 - - -
 
