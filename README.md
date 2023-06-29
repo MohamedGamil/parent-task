@@ -20,6 +20,15 @@ That's it. You can now test the application on your local machine 🥳
 > + **Frontend**: `http://localhost:4200`
 > + **Backend**: `http://localhost:8000`
 
+- - -
+
+## Testing
+To run backend tests, make sure you already have the app services up and running, then run the following command:
+
+```shell
+cd ./parent-aps-task
+npm run test
+```
 
 - - -
 
