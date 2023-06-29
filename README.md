@@ -32,6 +32,16 @@ npm run test
 
 - - -
 
+## Overview
+
+![Transactions Explorer](./screenshot.png)
+
+The application's user interface (UI) has been designed to meet the task's requirements, featuring a straightforward and intuitive design. However, the backend functionality of the application is considerably more complex in comparison.
+
+The backend code has been meticulously structured to adhere to SOLID principles, ensuring efficient implementation. Despite being somewhat complex, the backend code structure maintains an inherent flexibility, allowing for seamless extension and efficient development workflows.
+
+- - -
+
 
 ## The Challenge
 We have two providers collect data from them in json files we need to read and make some filter operations on them to get the result
@@ -84,4 +94,3 @@ Using PHP Laravel, implement this API endpoint `/api/v1/users` based on the foll
 + [✅] it should be able to filer by amount range for example `/api/v1/users?balanceMin=10&balanceMax=100` it should return result between **10** and **100** including **10** and **100**
 + [✅] it should be able to filer by `currency`
 + [✅] it should be able to combine all this filter together
-
