@@ -11,7 +11,13 @@
 
     <ng-container matColumnDef="parent_id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent ID</th>
-      <td mat-cell *matCellDef="let row">{{row.parent_id}}</td>
+      <td mat-cell *matCellDef="let row">
+        <small class="text-muted">
+          <strong>
+            {{ row.parent_id }}
+          </strong>
+        </small>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="parent_amount">

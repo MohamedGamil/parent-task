@@ -46,6 +46,14 @@ body {
   margin: 0 1rem;
 }
 
+.text-muted {
+  color: #7b7878;
+}
+
+small {
+  font-size: 11px;
+}
+
 button {
   cursor: pointer;
 }
