@@ -6,7 +6,6 @@ use Tests\TestCase;
 
 class ItsAliveTest extends TestCase
 {
-    // ?status=authorised&balanceMin=100&balanceMax=6000&provider=DataProviderY
     public function test_the_application_returns_a_successful_response(): void
     {
         $response = $this->get('/');
