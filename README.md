@@ -49,9 +49,9 @@ The UI can easily adjust to any changes done by the backend as long as the resul
 
 This detail won't matter to you if all you want is to integrate an additional data source, for example `DataProviderZ`. To accomplish this we need to follow these steps:
 
-0. Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
+1. Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
 
-1. Create a new data provider repository class at this path: `./backend/app/Repositories/DataProviderZRepository.php`, then add the following code:
+2. Create a new data provider repository class at this path: `./backend/app/Repositories/DataProviderZRepository.php`, then add the following code:
 ```php
 <?php
 
@@ -65,7 +65,7 @@ final class DataProviderZRepository extends JsonRepository
 }
 ```
 
-2. Add the new repository to the repositories configuration at `./backend/config/repositories.php`, as follows:
+3. Add the new repository to the repositories configuration at `./backend/config/repositories.php`, as follows:
 ```php
 <?php
 
@@ -78,7 +78,7 @@ return [
 ];
 ```
 
-3. Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
+4. Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
 ```php
 <?php
 
@@ -95,7 +95,7 @@ enum DataProviderZ: string
 }
 ```
 
-4. We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
+5. We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
 ```php
 <?php
 
@@ -115,7 +115,7 @@ enum DataProviderZStatus: int
 }
 ```
 
-5. Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
+6. Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
 ```php
 <?php
 
@@ -138,7 +138,7 @@ final class DataProviderZ extends Entity
 }
 ```
 
-6. Add the new entity to the entities type by modifying `./backend/domain/Types/Entities.php`, for example:
+7. Add the new entity to the entities type by modifying `./backend/domain/Types/Entities.php`, for example:
 ```php
 <?php
 
