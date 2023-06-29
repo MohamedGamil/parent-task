@@ -5,6 +5,7 @@
         "sail:composer": "./vendor/bin/sail composer",
         "sail:artisan": "./vendor/bin/sail artisan",
         "sail:up": "./vendor/bin/sail up",
+        "sail:down": "./vendor/bin/sail down",
         "dev": "vite",
         "build": "vite build"
     },
