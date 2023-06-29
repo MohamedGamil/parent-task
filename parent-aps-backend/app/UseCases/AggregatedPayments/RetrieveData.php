@@ -7,6 +7,7 @@ use App\UseCases\Base\UseCase;
 use App\UseCases\Contracts\RetrieveDataInterface;
 use App\Repositories\Contracts\PaymentsDataRepositoryInterface;
 use Domain\Entities\AggregatedPayment;
+use Domain\Types\AggregatedPayment as TAggregatedPayment;
 use Domain\Types\Entities;
 use Illuminate\Support\Collection;
 
@@ -32,6 +33,9 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
      */
     private Collection $inputs;
 
+    /**
+     * Filter callbacks
+     */
     private array $callbacks;
 
     /**
@@ -54,21 +58,29 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
 
     private function query($repository = null)
     {
-        $repository = $this->only ?? $repository ?? '';
+        $repository = $this->only ?? $repository;
+        $this->query = $this->aggregator->query($repository);
 
         if (false === empty($this->callbacks)) {
-            $query = $this->aggregator->only($repository);
+            $callbacks = $this->callbacks;
+            $stream = $this->query;
+            $apply = fn($item, $index, $repo, $callback) => $callback($item, $index, $repo);
 
-            foreach ($this->callbacks as $callback) {
-                $query = $query->filter($callback);
+            foreach ($callbacks as $callback) {
+                if (true === empty($repository)) {
+                    foreach ($stream as $repo => $items) {
+                        $stream[$repo] = $items->filter(fn($item, $idx) => $apply($item, $idx, $repo, $callback));
+                    }
+
+                    continue;
+                }
+
+                $stream = $stream->filter(fn($item, $idx) => $apply($item, $idx, $repository, $callback));
             }
 
             $this->query = collect(
-                $query->toArray()
+                $stream->toArray()
             );
-        }
-        else {
-            $this->query = $this->aggregator->query($repository);
         }
 
         return $this;
@@ -84,7 +96,9 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
     private function handleFilters()
     {
         return $this->handleProviderFilter()
-            ->handleStatusFilter();
+            ->handleStatusFilter()
+            ->handleAmountRangeFilter()
+            ->handleCurrencyFilter();
     }
 
     private function mapToEntities()
@@ -101,9 +115,11 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
         };
 
         if ($hasProviderFilter) {
-            return collect(
+            $this->query = collect(
                 [$entityNameFromRepo($provider) => $map($provider, $source)]
             );
+
+            return $this;
         }
 
         $source = $source
@@ -132,9 +148,7 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
 
     private function combine()
     {
-        return $this->query
-            ->flatten(1)
-            ->values();
+        return $this->query->flatten(1)->values();
     }
 
     /**
@@ -218,8 +232,55 @@ final class RetrieveData extends UseCase implements RetrieveDataInterface
         $this->filter(function($item, $index, $repository = null) use ($status, $initEntityStatus) {
             $entity = $this->getEntityFromRepository($repository, $item);
             $entityStatus = $initEntityStatus($status, $repository);
+            $attr = $entity->getAttribute(
+                TAggregatedPayment::STATUS_CODE->value
+            );
 
-            return $entity->getAttribute('status_code') === $entityStatus->value;
+            return $attr === $entityStatus->value;
+        });
+
+        return $this;
+    }
+
+    private function handleAmountRangeFilter()
+    {
+        $min = $this->inputs->get('balanceMin');
+        $max = $this->inputs->get('balanceMax');
+
+        if (empty($min) && empty($max)) {
+            return $this;
+        }
+
+        $this->filter(function($item, $index, $repository = null) use ($min, $max) {
+            $entity = $this->getEntityFromRepository($repository, $item);
+            $attr = $entity->getAttribute(
+                TAggregatedPayment::PARENT_AMOUNT->value
+            );
+
+            $min = max(intval($min ?? PHP_INT_MIN), PHP_INT_MIN);
+            $max = min(intval($max ?? PHP_INT_MAX), PHP_INT_MAX);
+
+            return $attr >= $min && $attr <= $max;
+        });
+
+        return $this;
+    }
+
+    private function handleCurrencyFilter()
+    {
+        $currency = $this->inputs->get('currency');
+
+        if (empty($currency)) {
+            return $this;
+        }
+
+        $this->filter(function($item, $index, $repository = null) use ($currency) {
+            $entity = $this->getEntityFromRepository($repository, $item);
+            $attr = $entity->getAttribute(
+                TAggregatedPayment::CURRENCY->value
+            );
+
+            return $attr === $currency;
         });
 
         return $this;

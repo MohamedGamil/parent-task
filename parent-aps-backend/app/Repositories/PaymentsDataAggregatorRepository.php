@@ -22,6 +22,8 @@ final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryIn
      */
     protected string $only = '';
 
+    private $source;
+
     /**
      * Create a new Aggregated Data Repository
      */
@@ -93,10 +95,20 @@ final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryIn
 
         if (is_array($source)) {
             return collect($source)
-                ->map(fn($repo) => $repo->filter(fn($item, $idx) => $callback($item, $idx, $repo)));
+                ->map(fn($repo) => $repo->filter(fn($item, $idx) => $callback(
+                    $item, $idx, $repo
+                )));
         }
 
         return $source->filter(fn($item, $idx) => $callback($item, $idx, $source));
+    }
+
+    public function setSource($source)
+    {
+        dd($this->source, $source);
+        $this->source = $source;
+
+        return $this;
     }
 
     /**
@@ -125,10 +137,18 @@ final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryIn
         $only = $this->only;
         $sources = [];
 
+        if (false === empty($this->source)) {
+            $src = $this->source;
+
+            $this->queryCleanup();
+
+            return $src;
+        }
+
         $this->queryCleanup();
 
         if (false === empty($repository) && isset($this->repositories[$repository])) {
-            return $this->repositories[$repository];
+            return $this->source = $this->repositories[$repository];
         }
 
         foreach($this->repositories as $class => $repo) {
@@ -140,14 +160,16 @@ final class PaymentsDataAggregatorRepository implements PaymentsDataRepositoryIn
         }
 
         if (false === empty($only) && 1 === count($sources)) {
-            return reset($sources);
+            return $this->source = reset($sources);
         }
 
-        return $sources;
+        return $this->source = $sources;
     }
 
     private function queryCleanup()
     {
         $this->only = '';
+        $this->source = null;
     }
 }
+

@@ -27,4 +27,12 @@ interface PaymentsDataRepositoryInterface extends Repository
      * @return Collection|LazyCollection
      */
     public function filter($callback);
+
+    /**
+     * Sets data source in internal repository pointer
+     *
+     * @param Collection|LazyCollection $source
+     * @return self
+     */
+    public function setSource($source);
 }
