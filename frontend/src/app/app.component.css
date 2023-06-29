@@ -1,0 +1,21 @@
+.boxed-layout {
+  margin: 2rem;
+  padding: 0 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.16);
+}
+
+.submit {
+  /* border-radius: 4px;
+  background-color: #fff; */
+}
+
+.filters {
+  padding: 1rem;
+  overflow-x: hidden;
+}
+
+.filters .mat-mdc-form-field {
+  width: 100%;
+}

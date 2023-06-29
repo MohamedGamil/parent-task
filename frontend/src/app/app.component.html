@@ -1,0 +1,73 @@
+<div class="boxed-layout">
+  <mat-toolbar color="primary">
+    <span>Parent ApS: Transactions Explorer</span>
+    <span class="spacer"></span>
+    <button mat-button mat-flat-button color="light" class="mx" [matMenuTriggerFor]="filtersMenu">
+      Filters
+    </button>
+    <mat-menu #filtersMenu="matMenu">
+      <div class="filters" (click)="$event.stopPropagation()">
+        <mat-form-field>
+          <mat-label>Data Provider</mat-label>
+          <mat-select [(ngModel)]="filters.provider">
+            <mat-option value="*">
+              All Providers
+            </mat-option>
+            <mat-option value="DataProviderX">
+              Data Provider-X
+            </mat-option>
+            <mat-option value="DataProviderY">
+              Data Provider-Y
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="filters.status">
+            <mat-option value="*">
+              All Status Types
+            </mat-option>
+            <mat-option value="authorised">
+              Authorised
+            </mat-option>
+            <mat-option value="decline">
+              Declined
+            </mat-option>
+            <mat-option value="refunded">
+              Refunded
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Currency</mat-label>
+          <mat-select [(ngModel)]="filters.currency">
+            <mat-option value="*">
+              All Currencies
+            </mat-option>
+            <mat-option value="USD">
+              U.S Dollar
+            </mat-option>
+            <mat-option value="AED">
+              U.A.E Dirham
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!-- <mat-form-field>
+        </mat-form-field> -->
+        <div class="full-width d-flex-cols no-scroll">
+          <mat-label>Amount Range</mat-label>
+          <mat-slider discrete min="0" max="99999">
+            <input matSliderStartThumb [(ngModel)]="filters.balanceMin">
+            <input matSliderEndThumb [(ngModel)]="filters.balanceMax">
+          </mat-slider>
+        </div>
+      </div>
+    </mat-menu>
+    <button mat-flat-button class="submit" aria-label="Reload data" color="light" (click)="fetchData()">
+      <mat-icon>refresh</mat-icon>
+      <span>Fetch Data</span>
+    </button>
+  </mat-toolbar>
+
+  <app-transactions-table #dataTable [filters]="filters"></app-transactions-table>
+</div>
