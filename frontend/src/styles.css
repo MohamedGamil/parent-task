@@ -1,4 +1,104 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+  font-family: Poppins, "Roboto", "Helvetica Neue", sans-serif !important;
+}
+
+body {
+  margin: 0;
+  background-color: #d2c0c0;
+}
+
+* {
+  box-sizing: border-box !important;
+  font-family: Poppins, "Roboto", "Helvetica Neue", sans-serif;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.d-flex,
+.d-flex-cols {
+  display: flex;
+}
+
+.d-flex-cols {
+  flex-direction: column;
+}
+
+.no-scroll {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.mx {
+  margin: 0 1rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+.mdc-button.mat-light {
+  --mdc-filled-button-label-text-color: #673ab7;
+  --mdc-filled-button-container-color: #FFF;
+}
+
+.mat-mdc-icon-button {
+  padding: 8px !important;
+  --mdc-icon-button-state-layer-size: 40px !important;
+}
+
+.mat-mdc-icon-button.mat-light {
+  --mdc-icon-button-icon-color: #673ab7;
+  background-color: #FFF;
+}
+
+[mat-flat-button] {
+  /* height: 38px;
+  min-width: fit-content;
+  padding: 0 1rem;
+  border-radius: 4px;
+  border: 0 solid;
+  font-weight: 600; */
+}
+
+[mat-icon-button] {
+  /* line-height: 3.87; */
+}
+
+.status-badge {
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: capitalize;
+  border-radius: 4px;
+  background-color: #e1e1e1;
+}
+
+.status-badge.status-badge--authorised {
+  color: #FFF;
+  background-color: #269d28;
+}
+
+.status-badge.status-badge--refunded {
+  color: #FFF;
+  background-color: #ee6e33;
+}
+
+.status-badge.status-badge--declined {
+  color: #FFF;
+  background-color: #ff2727;
+}

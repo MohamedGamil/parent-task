@@ -31,7 +31,7 @@ class ItsAliveTest extends TestCase
     {
         $response = $this->get('/api/v1/users?status=authorised');
 
-        $response->assertJsonCount(6, 'data');
+        $response->assertJsonCount(4, 'data');
     }
 
     public function test_the_api_endpoint_filter_range(): void
