@@ -5,12 +5,12 @@ In order to quickly test this app, first make sure that **Docker**, **Composer**
 
 + Clone this repository by running the following command somewhere on your local machine:
 ```shell
-git clone git@github.com:MohamedGamil/parent-task.git parent-aps-task
+git clone git@github.com:MohamedGamil/parent-task.git
 ```
 
 + Run the following commands to quickly setup, then spin up backend and frontend servers:
 ```shell
-cd ./parent-aps-task
+cd ./parent-task
 npm run setup
 npm run serve
 ```
