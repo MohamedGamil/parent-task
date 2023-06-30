@@ -57,7 +57,7 @@ The UI can easily adjust to any changes done by the backend as long as the resul
 > This implementation detail won't matter to you if all you want is to integrate an additional data source, let's say for example `DataProviderZ`. 
 
 
-**To accomplish this task** we need to follow these steps:
+**To integrate an additional data provider** follow these steps:
 
 **1.** Before writing any code, create a new file at this path: `./backend/storage/json/DataProviderZ.json`, then add the new provider JSON data.
 
@@ -83,10 +83,11 @@ return [
     'aggregated_payments_repositories' => [
         \App\Repositories\DataProviderXRepository::class,
         \App\Repositories\DataProviderYRepository::class,
-        \App\Repositories\DataProviderZRepository::class,
+        \App\Repositories\DataProviderZRepository::class, // <-- New repository
     ],
 ];
 ```
+> At this point the `App\Repositories\PaymentsDataAggregatorRepository` class would be able to integrate and query the data of the new repository, however we still need to implement more stable definitions of the new data provider which is more relevant to the `Domain` layer.
 
 **4.** Now we need to create concrete definition for the new data provider so the system can map its data set to the aggregated payments entity correctly, to do so first we create a new entity at `./backend/domain/Types/DataProviderZ.php`, using the following code example:
 ```php
@@ -105,7 +106,7 @@ enum DataProviderZ: string
 }
 ```
 
-**5.** We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following example code:
+**5.** We also need to create another enum for the status code values of the new entity at `./backend/domain/Types/DataProviderZStatus.php`, using the following code example:
 ```php
 <?php
 
@@ -125,7 +126,7 @@ enum DataProviderZStatus: int
 }
 ```
 
-**6.** Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following example code:
+**6.** Now we create a new enitity class for the new data provider at `./backend/domain/Entities/DataProviderZ.php`, using the following code example:
 ```php
 <?php
 
@@ -174,7 +175,7 @@ enum Entities: string
     ];
 ```
 
-Then add a new entity map, at line **28** add the following example code:
+Then add a new entity map, at line **28** add the following code example:
 ```php
 
     protected static $supportedEntitiesMap = [ // <-- Line 28
@@ -194,7 +195,7 @@ Then add a new entity map, at line **28** add the following example code:
 
 **That's all 🤞**
 
-Now we can query the new provider data using the api endpoint and its data will be mapped according to the key map pairs we defined in the example code above.
+Now we can query the new provider data using the api endpoint and its data will be mapped according to the key map pairs we defined in the code example above.
 
 - - -
 
