@@ -1,16 +1,17 @@
 # Parent ApS: Full Stack Assessment
 
 ## Getting Started
-In order to test this app, first make sure that **docker** and **NodeJS** are installed on your local machine, then follow these steps:
+In order to test this app, first make sure that **docker**, **Laravel Sail** and **NodeJS** are installed on your local machine, then follow these steps:
 
 + Clone this repository by running the following command somewhere on your local machine:
 ```shell
 git clone git@github.com:MohamedGamil/parent-task.git parent-aps-task
 ```
 
-+ Run the following command to quickly spin up backend and frontend servers:
++ Run the following commands to quickly setup & spin up backend and frontend servers:
 ```shell
 cd ./parent-aps-task
+npm run setup
 npm run serve
 ```
 

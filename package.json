@@ -3,6 +3,7 @@
     "type": "module",
     "scripts": {
         "test": "cd ./backend && npm run test",
+        "setup": "cd ./frontend && npm install && cd ../backend && composer update",
         "start": "npm run serve",
         "serve:frontend": "cd ./frontend && npm run start",
         "serve:backend": "cd ./backend && npm run sail:up",
