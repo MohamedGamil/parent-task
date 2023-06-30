@@ -40,9 +40,9 @@ The application's user interface (UI) has been designed to meet the task's requi
 
 The backend code has been meticulously structured to adhere to SOLID principles, ensuring efficient implementation. Despite being somewhat complex, the backend code structure maintains an inherent flexibility, allowing for seamless extension and efficient development workflows.
 
-Click the image below **[to watch a brief video](https://www.youtube.com/watch?v=7NH86cz9L7Q)** of the system in action:
+Click the image below **[to watch a brief video](https://bit.ly/3NV3ao6)** of the system in action:
 
-[![Demo Screenrecord](./preview.gif)](https://www.youtube.com/watch?v=7NH86cz9L7Q)
+[![Demo Screenrecord](./preview.gif)](https://bit.ly/3NV3ao6)
 
 
 - - -
