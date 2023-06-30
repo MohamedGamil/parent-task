@@ -1,7 +1,7 @@
 # Parent ApS: Full Stack Assessment
 
 ## Getting Started
-In order to test this app, first make sure that **docker**, **Laravel Sail** and **NodeJS** are installed on your local machine, then follow these steps:
+In order to quickly test this app, first make sure that **docker**, **Laravel Sail**, **Composer** and **NodeJS** are installed on your local machine, then follow these steps:
 
 + Clone this repository by running the following command somewhere on your local machine:
 ```shell
