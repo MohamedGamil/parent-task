@@ -8,7 +8,7 @@ In order to quickly test this app, first make sure that **docker**, **Laravel Sa
 git clone git@github.com:MohamedGamil/parent-task.git parent-aps-task
 ```
 
-+ Run the following commands to quickly setup & spin up backend and frontend servers:
++ Run the following commands to quickly setup, then spin up backend and frontend servers:
 ```shell
 cd ./parent-aps-task
 npm run setup
