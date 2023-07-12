@@ -12,7 +12,7 @@ abstract class Entity implements IEntity
     /**
      * Enable / Disable Strict Entity Attributes
      */
-    const STRICT_ATTRIBUTES = true;
+    const STRICT_ATTRIBUTES = false;
 
     /**
      * Entity label
@@ -47,10 +47,11 @@ abstract class Entity implements IEntity
 
     public function setAttributes(array $attributes)
     {
-        $this->attributes = $attributes;
         $allowed = array_keys(
             $this->getAttributes()
         );
+        
+        $this->attributes = $attributes;
 
         if (false === empty($allowed) && true === static::STRICT_ATTRIBUTES) {
             $this->attributes = collect($attributes)
